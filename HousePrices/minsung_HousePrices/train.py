@@ -3,6 +3,7 @@ import numpy as np
 from sklearn.model_selection import KFold
 from sklearn.metrics import mean_squared_error
 from sklearn.ensemble import RandomForestRegressor as rf
+from sklearn.neural_network import MLPRegressor as mlpr
 import xgboost as xgb
 import lightgbm as lgb
 
@@ -11,12 +12,15 @@ class trainer:
         self.models_lgb = []
         self.models_xgb = []
         self.models_rf = []
+        self.models_mlpr = []
         self.rmses_lgb = []
         self.rmses_xgb = []
         self.rmses_rf = []
+        self.rmses_mlpr = []
         self.oof_lgb = []
         self.oof_xgb = []
         self.oof_rf = []
+        self.oof_mlpr = []
         
     def train_lgb(self, train_X, train_Y, params:dict={}, folds=5):
         models = []
@@ -108,3 +112,28 @@ class trainer:
         self.oof_xgb.append(oof_xgb)
         rmse_xgb = np.sqrt(mean_squared_error(train_Y,oof_xgb))
         self.rmses_xgb.append(rmse_xgb)
+    
+    def train_mlpr(self, train_X, train_Y, folds=5, params:dict={}):
+        models = []
+        oof_mlpr = np.zeros(len(train_X))
+        
+        kf = KFold(n_splits=folds)
+        
+        for train_index, val_index in kf.split(train_X):
+            X_train = train_X.iloc[train_index]
+            X_valid = train_X.iloc[val_index]
+            y_train = train_Y.iloc[train_index]
+            y_valid = train_Y.iloc[val_index]
+            
+            model_mlpr = mlpr(**params)
+            model_mlpr.fit(X_train, y_train)
+            y_pred = model_mlpr.predict(X_valid)
+            
+            models.append(model_mlpr)
+            self.models_mlpr.append(models)
+            oof_mlpr[val_index] = y_pred
+            
+        self.models_mlpr.append(models)
+        self.oof_mlpr.append(oof_mlpr)
+        rmse_mlpr = np.sqrt(mean_squared_error(train_Y,oof_mlpr))
+        self.rmses_mlpr.append(rmse_mlpr)

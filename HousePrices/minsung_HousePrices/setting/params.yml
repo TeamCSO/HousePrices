@@ -17,3 +17,8 @@ xgb:
   max_depth: 6
   colsample_bytree: 0.330432640328732
   sublsample: 0.7158427239902707
+
+mlpr:
+  random_state: 1234
+  learning_rate_init: 0.1
+  hidden_layer_sizes: !!python/tuple [100,2]
