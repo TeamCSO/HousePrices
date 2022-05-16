@@ -16,6 +16,13 @@ xgb:
   seed: 1234
   max_depth: 6
   colsample_bytree: 0.330432640328732
+  sub_sample: 0.7158427239902707
+
+xgbr:
+  learning_rate: 0.05
+  seed: 1234
+  max_depth: 6
+  colsample_bytree: 0.330432640328732
   subsample: 0.7158427239902707
 
 mlpr:

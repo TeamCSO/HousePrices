@@ -22,22 +22,25 @@ with open(dir_path + '/setting/params.yml') as f:
 tr = trainer()
 pred = predictor()
 
-# tr.train_lgb(train_X, train_Y, params['lgb'])
-tr.train_xgb(train_X, train_Y, params['xgb'])
+tr.train_lgb(train_X, train_Y, params['lgb'])
+# tr.train_xgb(train_X, train_Y, params['xgb'])
+tr.train_xgbr(train_X, train_Y, params['xgbr'])
 # tr.train_mlpr(train_X, train_Y, params=params['mlpr'])
 
-# pred.predict_lgb(tr.models_lgb[0], test_X)
-pred.predict_xgb(tr.models_xgb[0], test_X)
+pred.predict_lgb(tr.models_lgb[0], test_X)
+# pred.predict_xgb(tr.models_xgb[0], test_X)
+pred.predict_xgbr(tr.models_xgbr[0],test_X)
 # pred.predict_mlpr(tr.models_mlpr[0], test_X)
 
-# print(tr.rmses_lgb)
-print(tr.rmses_xgb) #[0.11601585076934848]
-# print(tr.rmses_mlpr) #[0.39306480765719265]
+# print('rmse of lgb:',tr.rmses_lgb)
+# print('rmse of xgb:',tr.rmses_xgb) #[0.11601585076934848]
+# print('rmse of xgbr:',tr.rmses_xgbr) #[0.11567734530963232]
+# print('rmse of mlpr:',tr.rmses_mlpr) #[0.39306480765719265]
 
 # weight_lgb = (1 / tr.rmses_lgb[0])
 # weight_xgb = (1 / tr.rmses_xgb[0])
 # weight_mlpr = (1 / tr.rmses_mlpr[0])
 
-# preds_ans1 = pred.preds_lgb[0] * 0.5 + pred.preds_xgb[0] * 0.5
-# submission['SalePrice'] = preds_ans1
-# submission.to_csv(dir_path +'/submit/sample_submit03.csv', index=False)
+preds_ans1 = pred.preds_lgb[0] * 0.5 + pred.preds_xgbr[0] * 0.5
+submission['SalePrice'] = preds_ans1
+submission.to_csv(dir_path +'/submit/sample_submit04.csv', index=False)
